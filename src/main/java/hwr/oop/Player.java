@@ -1,10 +1,12 @@
+package hwr.oop;
+
 public class Player {
 
     private int currentPoints;
     private int maxThrowCount;
     private int throwCount;
     private int[] pointsInRound;
-    public String name;
+    private final String name;
 
     public Player(String name){
 

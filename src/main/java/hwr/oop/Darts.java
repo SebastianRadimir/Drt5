@@ -1,14 +1,18 @@
+package hwr.oop;
 import java.util.Arrays;
 
 public class Darts {
 
     private static int maxPoints;
     private static int throwsPerRound;
-    private Player[] players;
+    private final Player[] players;
     private int currentPlayer;
-    private int boardSize = 50;
+    private final int boardSize = 50;
+    private final int[] slicePoints;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
+
+        slicePoints = new int[]{6,13,4,18,1,20,5,12,914,11,8,16,7,19,3,17,2,15,10};
 
         if (playerAmount<=1 || maxPoints<=0 || throwsPerRound<=0){
 
@@ -48,11 +52,11 @@ public class Darts {
         }
         String[][] cs = new String[boardSize+1][boardSize+1];
         for (String[] c : cs) {
-            Arrays.fill(c, "  ");
+            Arrays.fill(c, "   ");
         }
         for (Polar p:ps) {
             if (p != null){
-                cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = "##";
+                cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = "###";
             }
         }
         StringBuilder sbo = new StringBuilder();
@@ -76,20 +80,20 @@ public class Darts {
         return null;
     }
 
-    public int evaluatePointsFromThrow(int x, int y){
+    public int evaluatePointsFromThrow(double x, double y){
         Polar pos = Polar.convertPosToPolar(x, y);
 
         double octagonalBoardSize = ((double)boardSize)/8;
 
         double distance = pos.getDistance();
-        int points = 0;
+        int points = slicePoints[(int)(((pos.getAngle()+((360/slicePoints.length)/2))%360)/(360/slicePoints.length))];
         int pointMultiplyer = 1;
 
         if (distance>boardSize){
             return 0;
         }
 
-        if (distance<=octagonalBoardSize*2){
+        if (distance<=(octagonalBoardSize*2)){
             if(distance<octagonalBoardSize){
                 return 50;
             }
@@ -101,8 +105,8 @@ public class Darts {
         if (boardSize<=octagonalBoardSize*5 && boardSize>octagonalBoardSize*4){
             pointMultiplyer = 3;
         }
-
-        throw new IllegalStateException("\n - Position "+intToStr(x)+","+intToStr(y)+" could not be computed into points.");
+        return points*pointMultiplyer;
+        //throw new IllegalStateException("\n - Position "+intToStr(x)+","+intToStr(y)+" could not be computed into points.");
     }
 
     public void printCurrentPlayerStats(Player p){

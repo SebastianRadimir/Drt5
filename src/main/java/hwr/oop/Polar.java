@@ -1,7 +1,9 @@
+package hwr.oop;
+
 public class Polar {
 
-    double distance;
-    double angle;
+    private double distance;
+    private double angle;
 
     public Polar(double distance, double angle){
         this.distance = distance;
@@ -26,11 +28,11 @@ public class Polar {
     }
 
     public static Polar convertPosToPolar(double x, double y){
-        double ang = (180/Math.PI)*Math.atan2(y,x);
+        double angle = (180/Math.PI)*Math.atan2(y,x);
         if (y<=0){
-            ang+=360;
+            angle+=360;
         }
-        return new Polar(Math.sqrt((x*x)+(y*y)),ang);
+        return new Polar(Math.sqrt((x*x)+(y*y)),angle);
     }
 
     public static Polar convertPolarToPos(Polar p){
