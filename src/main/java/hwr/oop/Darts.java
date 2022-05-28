@@ -3,16 +3,16 @@ import java.util.Arrays;
 
 public class Darts {
 
-    private static int maxPoints;
-    private static int throwsPerRound;
+    private final int maxPoints;
+    private final int throwsPerRound;
     private final Player[] players;
     private int currentPlayer;
-    private final int boardSize = 50;
+    private final int boardSize = 40;
     private final int[] slicePoints;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
 
-        slicePoints = new int[]{6,13,4,18,1,20,5,12,914,11,8,16,7,19,3,17,2,15,10};
+        slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
 
         if (playerAmount<=1 || maxPoints<=0 || throwsPerRound<=0){
 
@@ -31,11 +31,11 @@ public class Darts {
         }
 
         currentPlayer = 0;
-        Darts.throwsPerRound = throwsPerRound;
-        Darts.maxPoints = maxPoints;
+        this.throwsPerRound = throwsPerRound;
+        this.maxPoints = maxPoints;
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {
-            players[i] = new Player(intToStr(i));
+            players[i] = new Player(intToStr(i), throwsPerRound, maxPoints);
         }
 
         printBoard();
@@ -43,11 +43,11 @@ public class Darts {
 
     public void printBoard(){
         double halfBoard = (double)boardSize/2;
-        int[] borders = new int[]{boardSize/2,boardSize/3,1,2};
+        int[] borders = new int[]{boardSize/2,boardSize/3,1,2,3};
         Polar[] ps = new Polar[360*borders.length];
         for (int d = 0; d < borders.length; d++) {
             for (int i = 0; i < 360; i++) {
-                ps[(borders.length*i)+d] = Polar.convertPolarToPos(new Polar(borders[d], i * Math.PI / 180));
+                ps[(borders.length*i)+d] = Polar.convertPolarToPos(new Polar(borders[d], i));
             }
         }
         String[][] cs = new String[boardSize+1][boardSize+1];
@@ -80,44 +80,53 @@ public class Darts {
         return null;
     }
 
-    public int evaluatePointsFromThrow(double x, double y){
-        Polar pos = Polar.convertPosToPolar(x, y);
+    public int evaluatePointsFromThrow(double x, double y) {
+        return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
+    }
+    public int evaluatePointsFromThrow(Polar pos){
 
         double octagonalBoardSize = ((double)boardSize)/8;
 
         double distance = pos.getDistance();
-        int points = slicePoints[(int)(((pos.getAngle()+((360/slicePoints.length)/2))%360)/(360/slicePoints.length))];
-        int pointMultiplyer = 1;
+        double angle = pos.getAngle();
+        if (angle<0){
+            angle = 360+angle;
+        }
 
         if (distance>boardSize){
             return 0;
         }
 
-        if (distance<=(octagonalBoardSize*2)){
-            if(distance<octagonalBoardSize){
+        if (distance<=octagonalBoardSize*2) {
+            if (distance < octagonalBoardSize) {
                 return 50;
             }
             return 25;
         }
-        if (boardSize<=octagonalBoardSize*8 && boardSize>octagonalBoardSize*7){
-            pointMultiplyer = 2;
+
+        int pointMultiplier = 1;
+        if (distance>octagonalBoardSize*7){
+            pointMultiplier = 2;
         }
-        if (boardSize<=octagonalBoardSize*5 && boardSize>octagonalBoardSize*4){
-            pointMultiplyer = 3;
+        if (distance<=octagonalBoardSize*5 && distance>octagonalBoardSize*4){
+            pointMultiplier = 3;
         }
-        return points*pointMultiplyer;
+        return slicePoints[(int)((((angle+((360.0/slicePoints.length)/2.0))%360))/(360.0/slicePoints.length))]*pointMultiplier;
         //throw new IllegalStateException("\n - Position "+intToStr(x)+","+intToStr(y)+" could not be computed into points.");
     }
 
+    public int getBoardSize(){
+        return boardSize;
+    }
     public void printCurrentPlayerStats(Player p){
         System.out.println(p.toString());
     }
 
-    public static int getMaxPoints(){
+    public int getMaxPoints(){
         return maxPoints;
     }
 
-    public static int getThrowsPerRound(){
+    public int getThrowsPerRound(){
         return throwsPerRound;
     }
 

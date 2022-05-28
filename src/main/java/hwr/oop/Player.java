@@ -3,16 +3,18 @@ package hwr.oop;
 public class Player {
 
     private int currentPoints;
-    private int maxThrowCount;
     private int throwCount;
-    private int[] pointsInRound;
+    private final int[] pointsInRound;
     private final String name;
+    private final int maxThrowCount;
+    private final int maxGamePoints;
 
-    public Player(String name){
+
+    public Player(String name, int maxThrowCount, int maxPoints){
 
         this.name = name;
-
-        maxThrowCount = Darts.getThrowsPerRound();
+        this.maxGamePoints = maxPoints;
+        this.maxThrowCount = maxThrowCount;
         pointsInRound = new int[maxThrowCount];
         resetPlayerTurn();
         this.currentPoints = 0;
@@ -32,6 +34,9 @@ public class Player {
         this.throwCount = maxThrowCount;
 
     }
+    public int[] getPointArray(){
+        return pointsInRound;
+    }
 
     private int sumPoints(){
         int sum = 0;
@@ -47,12 +52,12 @@ public class Player {
 
     public int useThrow(int reachedPoints) {
         if (endedTurn()){
-            throw new UnsupportedOperationException("\n - '"+name+"' has already used up all "+Darts.intToStr(maxThrowCount)+" throws.");
+            throw new UnsupportedOperationException("\n - '"+name+"' has already used up all "+maxThrowCount+" throws.");
         }
 
         pointsInRound[maxThrowCount-throwCount] = reachedPoints;
-        if (Darts.getMaxPoints()-(currentPoints+sumPoints())<0){
-            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+Darts.intToStr(Darts.getMaxPoints()-(currentPoints+sumPoints()))+" points reached).");
+        if (maxGamePoints-(currentPoints+sumPoints())<0){
+            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+(maxGamePoints-(currentPoints+sumPoints()))+" points reached).");
         }
         throwCount--;
         return throwCount;
@@ -86,11 +91,11 @@ public class Player {
             sb.append("\n");
         }
 
-        int aquiredPoints = Darts.getMaxPoints()-currentPoints;
+        int acquiredPoints = maxGamePoints-currentPoints;
 
         sb.append("Currently at ");
-        sb.append(Darts.intToStr(aquiredPoints));
-        if (aquiredPoints == 1 || aquiredPoints == -1){
+        sb.append(Darts.intToStr(acquiredPoints));
+        if (acquiredPoints == 1 || acquiredPoints == -1){
             sb.append(" point");
         }else {
             sb.append(" points");
