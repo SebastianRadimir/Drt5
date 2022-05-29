@@ -7,7 +7,7 @@ public class Darts {
     private final int throwsPerRound;
     private final Player[] players;
     private int currentPlayerIndex;
-    private final int boardSize = 20;
+    private final int boardSize = 60;
     private final int[] slicePoints;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
@@ -47,25 +47,37 @@ public class Darts {
         players[currentPlayerIndex].resetPlayerTurn();
         currentPlayerIndex = (currentPlayerIndex + 1)%players.length;
     }
-    @Override
-    public String toString(){
+
+    public String getCharBoard(int x, int y){
         double halfBoard = (double)boardSize/2;
-        int[] borders = new int[]{boardSize/2,boardSize/3,1,2,3};
+        int[] borders = new int[]{boardSize/2,boardSize/3,1,(boardSize)/8,((boardSize)/4),((boardSize)/8)*4};
         Polar[] ps = new Polar[360*borders.length];
         for (int d = 0; d < borders.length; d++) {
             for (int i = 0; i < 360; i++) {
                 ps[(borders.length*i)+d] = Polar.convertPolarToPos(new Polar(borders[d], i));
             }
         }
+        Polar[] ps2 = new Polar[20*boardSize];
+        for (int d = 0; d < 20; d++) {
+            for (int i = ((boardSize)/8); i < halfBoard; i++) {
+                ps2[(20*i)+d] = Polar.convertPolarToPos(new Polar(i, (d*18)+9));
+            }
+        }
         String[][] cs = new String[boardSize+1][boardSize+1];
         for (String[] c : cs) {
             Arrays.fill(c, "   ");
+        }
+        for (Polar p:ps2) {
+            if (p != null){
+                cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = " # ";
+            }
         }
         for (Polar p:ps) {
             if (p != null){
                 cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = "###";
             }
         }
+        cs[y+(int)halfBoard][x+(int)halfBoard] = "<O>";
         StringBuilder sbo = new StringBuilder();
         for (String[] c : cs) {
             StringBuilder sbi = new StringBuilder();
@@ -95,10 +107,6 @@ public class Darts {
         double octagonalBoardSize = ((double)boardSize)/8;
 
         double distance = pos.getDistance();
-        double angle = pos.getAngle();
-        if (angle<0){
-            angle = 360+angle;
-        }
 
         if (distance>boardSize){
             return 0;
@@ -111,6 +119,10 @@ public class Darts {
             return 25;
         }
 
+        double angle = pos.getAngle();
+        if (angle<0){
+            angle = 360+angle;
+        }
         int pointMultiplier = 1;
         if (distance>octagonalBoardSize*7){
             pointMultiplier = 2;
