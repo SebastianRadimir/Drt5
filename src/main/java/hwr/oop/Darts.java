@@ -6,8 +6,8 @@ public class Darts {
     private final int maxPoints;
     private final int throwsPerRound;
     private final Player[] players;
-    private int currentPlayer;
-    private final int boardSize = 40;
+    private int currentPlayerIndex;
+    private final int boardSize = 20;
     private final int[] slicePoints;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
@@ -15,9 +15,7 @@ public class Darts {
         slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
 
         if (playerAmount<=1 || maxPoints<=0 || throwsPerRound<=0){
-
             StringBuilder sb = new StringBuilder();
-
             if (playerAmount<=1) {
                 sb.append("\n - 'playerAmount' cannot be less than 2.");
             }
@@ -30,18 +28,27 @@ public class Darts {
             throw new IllegalArgumentException(sb.toString());
         }
 
-        currentPlayer = 0;
+        currentPlayerIndex = 0;
         this.throwsPerRound = throwsPerRound;
         this.maxPoints = maxPoints;
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {
-            players[i] = new Player(intToStr(i), throwsPerRound, maxPoints);
+            players[i] = new Player("Player " + intToStr(i), throwsPerRound, maxPoints);
         }
 
-        printBoard();
     }
 
-    public void printBoard(){
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
+    }
+
+    public void iterateToNextPlayer(){
+        printPlayerStats(players[currentPlayerIndex]);
+        players[currentPlayerIndex].resetPlayerTurn();
+        currentPlayerIndex = (currentPlayerIndex + 1)%players.length;
+    }
+    @Override
+    public String toString(){
         double halfBoard = (double)boardSize/2;
         int[] borders = new int[]{boardSize/2,boardSize/3,1,2,3};
         Polar[] ps = new Polar[360*borders.length];
@@ -68,7 +75,7 @@ public class Darts {
             sbi.append("\n");
             sbo.append(sbi);
         }
-        System.out.println(sbo);
+        return sbo.toString();
     }
 
     public Player getPlayerByName(String name){
@@ -80,9 +87,9 @@ public class Darts {
         return null;
     }
 
-    public int evaluatePointsFromThrow(double x, double y) {
-        return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
-    }
+    //public int evaluatePointsFromThrow(double x, double y) {
+    //    return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
+    //}
     public int evaluatePointsFromThrow(Polar pos){
 
         double octagonalBoardSize = ((double)boardSize)/8;
@@ -112,13 +119,12 @@ public class Darts {
             pointMultiplier = 3;
         }
         return slicePoints[(int)((((angle+((360.0/slicePoints.length)/2.0))%360))/(360.0/slicePoints.length))]*pointMultiplier;
-        //throw new IllegalStateException("\n - Position "+intToStr(x)+","+intToStr(y)+" could not be computed into points.");
     }
 
     public int getBoardSize(){
         return boardSize;
     }
-    public void printCurrentPlayerStats(Player p){
+    public void printPlayerStats(Player p){
         System.out.println(p.toString());
     }
 

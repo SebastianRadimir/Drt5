@@ -30,9 +30,4 @@ public class Polar {
     public static Polar convertPolarToPos(Polar p){
         return new Polar(p.getDistance()*Math.cos(Math.toRadians(p.getAngle())),p.getDistance()*Math.sin(Math.toRadians(p.getAngle())));
     }
-
-    @Override
-    public String toString() {
-        return "Polar{" + "distance=" + distance + ", angle=" + angle + "}";
-    }
 }

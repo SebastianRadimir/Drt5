@@ -11,6 +11,16 @@ public class Player {
 
 
     public Player(String name, int maxThrowCount, int maxPoints){
+        if (maxPoints<=0 || maxThrowCount<=0){
+            StringBuilder sb = new StringBuilder();
+            if (maxPoints<=0){
+                sb.append("\n - 'maxPoints' is not allowed to be under 1 point.");
+            }
+            if (maxThrowCount<=0){
+                sb.append("\n - 'throwsPerRound' is not allowed to be under 1.");
+            }
+            throw new IllegalArgumentException(sb.toString());
+        }
 
         this.name = name;
         this.maxGamePoints = maxPoints;
@@ -20,13 +30,9 @@ public class Player {
         this.currentPoints = 0;
     }
 
-    public void setCurrentPoints(int currentPoints) {
-        this.currentPoints = currentPoints;
-    }
-
     public void resetPlayerTurn(){
 
-        currentPoints+=sumPoints();
+        currentPoints+=sumRoundPoints();
 
         for (int i = 0; i < maxThrowCount; i++) {
             pointsInRound[i] = 0;
@@ -38,7 +44,7 @@ public class Player {
         return pointsInRound;
     }
 
-    private int sumPoints(){
+    private int sumRoundPoints(){
         int sum = 0;
         for (int i = 0; i < maxThrowCount; i++) {
             sum+=pointsInRound[i];
@@ -46,21 +52,27 @@ public class Player {
         return sum;
     }
 
+    public boolean hasWon(){
+        return maxGamePoints-(currentPoints+sumRoundPoints())==0;
+    }
+
     public boolean endedTurn(){
         return throwCount == 0;
     }
 
-    public int useThrow(int reachedPoints) {
+    public void useThrow(int reachedPoints) {
+        if (reachedPoints >= 61 || reachedPoints <= -1){
+            throw new IllegalStateException("\n - '"+name+"' has reached "+reachedPoints+" points, which isn't possible).");
+        }
         if (endedTurn()){
-            throw new UnsupportedOperationException("\n - '"+name+"' has already used up all "+maxThrowCount+" throws.");
+            throw new UnsupportedOperationException("\n - '"+name+"' has already used up all "+maxThrowCount+" throw(s).");
         }
 
         pointsInRound[maxThrowCount-throwCount] = reachedPoints;
-        if (maxGamePoints-(currentPoints+sumPoints())<0){
-            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+(maxGamePoints-(currentPoints+sumPoints()))+" points reached).");
+        if (maxGamePoints-(currentPoints+sumRoundPoints())<0){
+            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+(maxGamePoints-(currentPoints+sumRoundPoints()))+" points reached).");
         }
         throwCount--;
-        return throwCount;
     }
 
     public String getName(){
@@ -77,10 +89,11 @@ public class Player {
         StringBuilder sb = new StringBuilder();
         sb.append("PLAYER:");
         sb.append(name);
+        sb.append("\n");
 
         for (int i = 0; i < maxThrowCount; i++) {
             sb.append(" -throw ");
-            sb.append(Darts.intToStr(i));
+            sb.append(Darts.intToStr(i+1));
             sb.append(" : ");
             sb.append(Darts.intToStr(pointsInRound[i]));
             if (pointsInRound[i] == 1){
