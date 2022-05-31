@@ -40,44 +40,44 @@ class ExampleTest {
             e.printStackTrace();
         }
     }
-    @ParameterizedTest(name = "test dart position out of bounds ( x:{0},y:0)")
-    @ValueSource(ints = {-11,11,50,20,12})
-    void Darts_testPrintedBoardSize20Error(int i) {
-        Darts d = new Darts(12, 301, 3);
-        if (d.getBoardSize() == 20) {
-            try {
-                d.getCharBoard(i, 0);
-                fail("Dart Out of bounds");
-            } catch(ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
-            }
-        }else{
-            System.out.println("boardSize was not 20 => ignored Darts_testPrintedBoardSize20Error Test.");
-        }
-    }
-    @ParameterizedTest(name = "test dart position out of bounds ( x:{0},y:0)")
-    @ValueSource(ints = {-21,21,50,30,22})
-    void Darts_testPrintedBoardSize40Error(int i) {
-        Darts d = new Darts(12, 301, 3);
-        if (d.getBoardSize() == 40) {
-            try {
-                d.getCharBoard(i, 0);
-                fail("Dart Out of bounds");
-            } catch(ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
-            }
-        } else{
-            System.out.println("boardSize was not 40 => ignored Darts_testPrintedBoardSize40Error Test.");
-        }
-    }
+    //@ParameterizedTest(name = "test dart position out of bounds ( x:{0},y:0)")
+    //@ValueSource(ints = {-11,11,50,20,12})
+    //void Darts_testPrintedBoardSize20Error(int i) {
+    //    Darts d = new Darts(12, 301, 3);
+    //    if (d.getBoardSize() == 20) {
+    //        try {
+    //            d.getCharBoard(i, 0);
+    //            fail("Dart Out of bounds");
+    //        } catch(ArrayIndexOutOfBoundsException e){
+    //            e.printStackTrace();
+    //        }
+    //    }else{
+    //        System.out.println("boardSize was not 20 => ignored Darts_testPrintedBoardSize20Error Test.");
+    //    }
+    //}
+    //@ParameterizedTest(name = "test dart position out of bounds ( x:{0},y:0)")
+    //@ValueSource(ints = {-21,21,50,30,22})
+    //void Darts_testPrintedBoardSize40Error(int i) {
+    //    Darts d = new Darts(12, 301, 3);
+    //    if (d.getBoardSize() == 40) {
+    //        try {
+    //            d.getCharBoard(i, 0);
+    //            fail("Dart Out of bounds");
+    //        } catch(ArrayIndexOutOfBoundsException e){
+    //            e.printStackTrace();
+    //        }
+    //    } else{
+    //        System.out.println("boardSize was not 40 => ignored Darts_testPrintedBoardSize40Error Test.");
+    //    }
+    //}
     @Test
     void Darts_testPrintedBoardSize20(){
         Darts d = new Darts(12,301,3);
         if (d.getBoardSize()==20){
-            assertThat(d.getCharBoard(-3,-8)).isEqualTo(
+            assertThat(d.getBoard().toString()).isEqualTo(
                     "                              ###                              \n" +
                             "                  ###########################                  \n" +
-                            "               ######<O>    # ### #       ######               \n" +
+                            "               ######       # ### #       ######               \n" +
                             "         ######      #####################      ######         \n" +
                             "         ### # #########    # ### #    ######### # ###         \n" +
                             "      ###   ######   #####################   ######   ###      \n" +
@@ -105,8 +105,8 @@ class ExampleTest {
     void Darts_testPrintedBoardSize40(){
         Darts d = new Darts(12,301,3);
         if (d.getBoardSize()==40){
-            assertThat(d.getCharBoard(20,-20)).isEqualTo(
-                    "                                                            ###                                                         <O>\n" +
+            assertThat(d.getBoard().toString()).isEqualTo(
+                    "                                                            ###                                                            \n" +
                             "                                          #######################################                                          \n" +
                             "                                    #########          #           #          #########                                    \n" +
                             "                              #########                #           #                #########                              \n" +
@@ -156,7 +156,7 @@ class ExampleTest {
     void Darts_testPrintedBoardSize60(){
         Darts d = new Darts(12,301,3);
         if (d.getBoardSize()==60){
-            assertThat(d.getCharBoard(15,10)).isEqualTo(
+            assertThat(d.getBoard().toString()).isEqualTo(
                     "                                                                                          ###                                                                                          \n" +
                             "                                                                     #############################################                                                                     \n" +
                             "                                                            ############       #          ###          #       ############                                                            \n" +
@@ -197,7 +197,7 @@ class ExampleTest {
                             "   ############                     ###       #  # ######             #           #     # ### #     #           #             ###### #  #       ###                     ############   \n" +
                             "      ###   ###                     ###### #          ###          #           #        #     #        #           #          ###          # ######                     ###   ###      \n" +
                             "      ###   ###                   #  # ###               ###    #              #        #     #        #              #    ###               ### #  #                   ###   ###      \n" +
-                            "      ###   ######          #  #       ######            ######             #           #     #           #             ######         <O>######       #  #          ######   ###      \n" +
+                            "      ###   ######          #  #       ######            ######             #           #     #           #             ######            ######       #  #          ######   ###      \n" +
                             "         ###   ###    #  #                ###             # ######          #           #     #           #          ###### #             ###                #  #    ###   ###         \n" +
                             "         ###   ######                        ###       #          ###### #           #           #           # ######          #       ###                        ######   ###         \n" +
                             "            ### # ###                        ###### #                #########       #           #       #########                # ######                        ### # ###            \n" +
@@ -811,6 +811,7 @@ class ExampleTest {
 
 
     }
+
     @Test
     void Player_TestHasWonScenario1(){
         Player p = new Player("P 1",2, 10);
@@ -851,27 +852,6 @@ class ExampleTest {
         }
         p.useThrow(4);
         assertThat(p.hasWon()).isTrue();
-    }
-
-    @Test
-    void Darts_TestIntToStringConversionForValue0() {
-        assertThat(Darts.intToStr(0)).isEqualTo("0");
-    }@Test
-    void Darts_TestIntToStringConversionForValue1(){
-        assertThat(Darts.intToStr(1)).isEqualTo("1");
-    }@Test
-    void Darts_TestIntToStringConversionForValue2(){
-        assertThat(Darts.intToStr(2)).isEqualTo("2");
-    }@Test
-    void Darts_TestIntToStringConversionForValue3(){
-        assertThat(Darts.intToStr(3)).isEqualTo("3");
-    }@Test
-    void Darts_TestIntToStringConversionForValue4(){
-        assertThat(Darts.intToStr(4)).isEqualTo("4");
-    }
-    @Test
-    void Darts_TestIntToStringConversionForValueMinus5(){
-        assertThat(Darts.intToStr(-5)).isEqualTo("-5");
     }
 
     @Test

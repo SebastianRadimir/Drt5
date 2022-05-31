@@ -52,6 +52,10 @@ public class Player {
         return sum;
     }
 
+    public void resetLastPoint(){
+        pointsInRound[maxThrowCount-throwCount] = 0;
+    }
+
     public boolean hasWon(){
         return maxGamePoints-(currentPoints+sumRoundPoints())==0;
     }
@@ -93,9 +97,9 @@ public class Player {
 
         for (int i = 0; i < maxThrowCount; i++) {
             sb.append(" -throw ");
-            sb.append(Darts.intToStr(i+1));
+            sb.append(i+1);
             sb.append(" : ");
-            sb.append(Darts.intToStr(pointsInRound[i]));
+            sb.append(pointsInRound[i]);
             if (pointsInRound[i] == 1){
                 sb.append(" point");
             }else {
@@ -107,7 +111,7 @@ public class Player {
         int acquiredPoints = maxGamePoints-currentPoints;
 
         sb.append("Currently at ");
-        sb.append(Darts.intToStr(acquiredPoints));
+        sb.append(acquiredPoints);
         if (acquiredPoints == 1 || acquiredPoints == -1){
             sb.append(" point");
         }else {

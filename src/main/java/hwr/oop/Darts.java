@@ -1,5 +1,6 @@
 package hwr.oop;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Darts {
 
@@ -9,8 +10,11 @@ public class Darts {
     private int currentPlayerIndex;
     private final int boardSize = 60;
     private final int[] slicePoints;
+    private final Dartboard dartboard;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
+
+        dartboard = new Dartboard(boardSize);
 
         slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
 
@@ -33,61 +37,55 @@ public class Darts {
         this.maxPoints = maxPoints;
         players = new Player[playerAmount];
         for (int i = 0; i < playerAmount; i++) {
-            players[i] = new Player("Player " + intToStr(i), throwsPerRound, maxPoints);
+            players[i] = new Player("Player " + i, throwsPerRound, maxPoints);
         }
 
+    }
+
+    public Dartboard getBoard(){
+        return this.dartboard;
     }
 
     public int getCurrentPlayerIndex(){
         return currentPlayerIndex;
     }
 
-    public void iterateToNextPlayer(){
-        printPlayerStats(players[currentPlayerIndex]);
-        players[currentPlayerIndex].resetPlayerTurn();
-        currentPlayerIndex = (currentPlayerIndex + 1)%players.length;
+    public void initGameLoop(){
+
+        boolean inGame = true;
+        while (inGame) {
+
+            System.out.println("It is currently " + players[currentPlayerIndex].getName() + "'s turn.");
+            for (int i = 0; i < this.throwsPerRound; i++) {
+                try {
+                    Random r = new Random();
+                    players[currentPlayerIndex].useThrow(evaluatePointsFromThrow(new Polar(r.nextInt((boardSize + 1)), r.nextInt((360)))));
+                } catch (IllegalStateException e){
+                    System.out.println(players[currentPlayerIndex].getName() + " has reached a lower score than 0!");
+                    resetIllegalThrow(null);
+                    break;
+                } catch (UnsupportedOperationException e){
+                    System.out.println(players[currentPlayerIndex].getName() + " has used up all their throws!");
+                    break;
+                }
+                if (players[currentPlayerIndex].hasWon()){
+                    System.out.println(players[currentPlayerIndex].getName() + " has WON the match!");
+                    inGame = false;
+                }
+            }
+            printPlayerStats(players[currentPlayerIndex]);
+            iterateToNextPlayer();
+        }
+        System.out.println();
     }
 
-    public String getCharBoard(int x, int y){
-        double halfBoard = (double)boardSize/2;
-        int[] borders = new int[]{boardSize/2,boardSize/3,1,(boardSize)/8,((boardSize)/4),((boardSize)/8)*4};
-        Polar[] ps = new Polar[360*borders.length];
-        for (int d = 0; d < borders.length; d++) {
-            for (int i = 0; i < 360; i++) {
-                ps[(borders.length*i)+d] = Polar.convertPolarToPos(new Polar(borders[d], i));
-            }
-        }
-        Polar[] ps2 = new Polar[20*boardSize];
-        for (int d = 0; d < 20; d++) {
-            for (int i = ((boardSize)/8); i < halfBoard; i++) {
-                ps2[(20*i)+d] = Polar.convertPolarToPos(new Polar(i, (d*18)+9));
-            }
-        }
-        String[][] cs = new String[boardSize+1][boardSize+1];
-        for (String[] c : cs) {
-            Arrays.fill(c, "   ");
-        }
-        for (Polar p:ps2) {
-            if (p != null){
-                cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = " # ";
-            }
-        }
-        for (Polar p:ps) {
-            if (p != null){
-                cs[(int)p.getDistance()+(int)halfBoard][(int)p.getAngle()+(int)halfBoard] = "###";
-            }
-        }
-        cs[y+(int)halfBoard][x+(int)halfBoard] = "<O>";
-        StringBuilder sbo = new StringBuilder();
-        for (String[] c : cs) {
-            StringBuilder sbi = new StringBuilder();
-            for (String s : c) {
-                sbi.append(s);
-            }
-            sbi.append("\n");
-            sbo.append(sbi);
-        }
-        return sbo.toString();
+    public void resetIllegalThrow(Dart d){
+        players[currentPlayerIndex].resetLastPoint();
+        dartboard.removeDart(d);
+    }
+    public void iterateToNextPlayer(){
+        players[currentPlayerIndex].resetPlayerTurn();
+        currentPlayerIndex = (currentPlayerIndex + 1)%players.length;
     }
 
     public Player getPlayerByName(String name){
@@ -148,7 +146,4 @@ public class Darts {
         return throwsPerRound;
     }
 
-    public static String intToStr(int i){
-        return Integer.toString(i);
-    }
 }
