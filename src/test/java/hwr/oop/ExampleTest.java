@@ -314,7 +314,6 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_18Points() {
-        int points = 18;
         Dartboard d = new Dartboard(60);
         for (int i = 45; i < 63; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(18);

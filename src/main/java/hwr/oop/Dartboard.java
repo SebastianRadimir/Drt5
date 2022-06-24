@@ -7,18 +7,17 @@ public class Dartboard {
 
     private int boardSize;
     private final int[] slicePoints;
-    private ArrayList<Dart> thrownDarts = new ArrayList<>();
+
+    private DartCollection dartCollenction;
 
     public Dartboard(int boardSize){
         this.slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
         this.boardSize = boardSize;
+        this.dartCollenction = new DartCollection();
     }
 
-    void addDart(Dart d){
-        thrownDarts.add(d);
-    }
-    public void removeDart(Dart d){
-        thrownDarts.remove(d);
+    DartCollection getDartCollection(){
+        return dartCollenction;
     }
 
     public int getBoardSize(){
@@ -28,11 +27,11 @@ public class Dartboard {
     //public int evaluatePointsFromThrow(double x, double y) {
     //    return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
     //}
-    public int evaluatePointsFromThrow(Polar pos){
+    int evaluatePointsFromThrow(Polar pos){
 
         double octagonalBoardSize = ((double)boardSize)/8;
-
         double distance = pos.getDistance();
+        double angle = pos.getAngle();
 
         if (distance>boardSize){
             return 0;
@@ -45,7 +44,6 @@ public class Dartboard {
             return 25;
         }
 
-        double angle = pos.getAngle();
         if (angle<0){
             angle = 360+angle;
         }

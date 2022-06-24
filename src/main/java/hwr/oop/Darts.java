@@ -39,10 +39,6 @@ public class Darts {
 
     }
 
-    public Dartboard getBoard(){
-        return this.dartboard;
-    }
-
     public int getCurrentPlayerIndex(){
         return currentPlayerIndex;
     }
@@ -78,7 +74,7 @@ public class Darts {
 
     public void resetIllegalThrow(Dart d){
         players[currentPlayerIndex].resetLastPoint();
-        dartboard.removeDart(d);
+        dartboard.getDartCollection().removeDart(d);
     }
     public void iterateToNextPlayer(){
         players[currentPlayerIndex].resetPlayerTurn();
