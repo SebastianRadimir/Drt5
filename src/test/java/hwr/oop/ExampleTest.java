@@ -72,9 +72,9 @@ class ExampleTest {
     //}
     @Test
     void Darts_testPrintedBoardSize20(){
-        Darts d = new Darts(12,301,3);
+        Dartboard d = new Dartboard(20);
         if (d.getBoardSize()==20){
-            assertThat(d.getBoard().toString()).isEqualTo(
+            assertThat(d.toString()).isEqualTo(
                     "                              ###                              \n" +
                             "                  ###########################                  \n" +
                             "               ######       # ### #       ######               \n" +
@@ -103,9 +103,9 @@ class ExampleTest {
     }
     @Test
     void Darts_testPrintedBoardSize40(){
-        Darts d = new Darts(12,301,3);
+        Dartboard d = new Dartboard(40);
         if (d.getBoardSize()==40){
-            assertThat(d.getBoard().toString()).isEqualTo(
+            assertThat(d.toString()).isEqualTo(
                     "                                                            ###                                                            \n" +
                             "                                          #######################################                                          \n" +
                             "                                    #########          #           #          #########                                    \n" +
@@ -154,9 +154,9 @@ class ExampleTest {
     }
     @Test
     void Darts_testPrintedBoardSize60(){
-        Darts d = new Darts(12,301,3);
+        Dartboard d = new Dartboard(60);
         if (d.getBoardSize()==60){
-            assertThat(d.getBoard().toString()).isEqualTo(
+            assertThat(d.toString()).isEqualTo(
                     "                                                                                          ###                                                                                          \n" +
                             "                                                                     #############################################                                                                     \n" +
                             "                                                            ############       #          ###          #       ############                                                            \n" +
@@ -235,7 +235,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_BULLSEYE() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 0; i < 360; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)-1, i))).isEqualTo(50);
             assertThat(d.evaluatePointsFromThrow(new Polar(0, i))).isEqualTo(50);
@@ -245,7 +245,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_NextToBullsEye() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 0; i < 360; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2, i))).isEqualTo(25);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0), i))).isEqualTo(25);
@@ -256,14 +256,14 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_OutOfBounds() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 0; i < 360; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar(d.getBoardSize()+1, i))).isEqualTo(0);
         }
     }
     @Test
     void Darts_evaluatePointsFromThrow_6Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = -9; i < 9; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(6);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(6);
@@ -280,7 +280,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_13Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 9; i < 27; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(13);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(13);
@@ -297,7 +297,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_4Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 27; i < 45; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(4);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(4);
@@ -315,24 +315,24 @@ class ExampleTest {
     @Test
     void Darts_evaluatePointsFromThrow_18Points() {
         int points = 18;
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 45; i < 63; i++) {
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(points);
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(points);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(18);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(18);
 
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4.1, i))).isEqualTo(points*3);
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*5, i))).isEqualTo(points*3);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4.1, i))).isEqualTo(54);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*5, i))).isEqualTo(54);
 
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*5.1, i))).isEqualTo(points);
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*7, i))).isEqualTo(points);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*5.1, i))).isEqualTo(18);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*7, i))).isEqualTo(18);
 
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*7.1, i))).isEqualTo(points*2);
-            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*8, i))).isEqualTo(points*2);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*7.1, i))).isEqualTo(36);
+            assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*8, i))).isEqualTo(36);
         }
     }
     @Test
     void Darts_evaluatePointsFromThrow_1Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 63; i < 81; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(1);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(1);
@@ -349,7 +349,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_20Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 81; i < 99; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(20);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(20);
@@ -366,7 +366,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_5Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 99; i < 117; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(5);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(5);
@@ -383,7 +383,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_12Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 117; i < 135; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(12);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(12);
@@ -400,7 +400,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_9Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 135; i < 153; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(9);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(9);
@@ -417,7 +417,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_14Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 153; i < 171; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(14);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(14);
@@ -434,7 +434,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_11Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 171; i < 189; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(11);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(11);
@@ -451,7 +451,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_8Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 189; i < 207; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(8);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(8);
@@ -468,7 +468,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_16Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 207; i < 225; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(16);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(16);
@@ -485,7 +485,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_7Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 225; i < 243; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(7);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(7);
@@ -502,7 +502,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_19Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 243; i < 261; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(19);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(19);
@@ -519,7 +519,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_3Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 261; i < 279; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(3);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(3);
@@ -536,7 +536,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_17Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 279; i < 297; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(17);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(17);
@@ -553,7 +553,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_2Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 297; i < 315; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(2);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(2);
@@ -570,7 +570,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_15Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i =315; i < 333; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(15);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(15);
@@ -587,7 +587,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_10Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 333; i < 351; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(10);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(10);
@@ -604,7 +604,7 @@ class ExampleTest {
     }
     @Test
     void Darts_evaluatePointsFromThrow_6P2Points() {
-        Darts d = new Darts(2,3,4);
+        Dartboard d = new Dartboard(60);
         for (int i = 351; i < 369; i++) {
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*2.1, i))).isEqualTo(6);
             assertThat(d.evaluatePointsFromThrow(new Polar((d.getBoardSize()/8.0)*4, i))).isEqualTo(6);
@@ -956,4 +956,16 @@ class ExampleTest {
         assertThat(Math.round(cp.getDistance())).isEqualTo(3);
         assertThat(Math.round(cp.getAngle())).isEqualTo(0);
     }
+
+    @Test
+    void Dart_testGetPos(){
+        Polar p = new Polar(10,3);
+        Dart d = new Dart("temp",p);
+        assertThat(d.getPos()).isEqualTo(p);
+        assertThat(d.getPlayerName()).isEqualTo("temp");
+        assertThat(d.getPlayerName()).isNotEqualTo("Temp");
+    }
+
+
+
 }

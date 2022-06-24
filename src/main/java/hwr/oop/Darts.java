@@ -1,5 +1,4 @@
 package hwr.oop;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Darts {
@@ -9,14 +8,12 @@ public class Darts {
     private final Player[] players;
     private int currentPlayerIndex;
     private final int boardSize = 60;
-    private final int[] slicePoints;
     private final Dartboard dartboard;
 
     public Darts(int playerAmount, int maxPoints, int throwsPerRound){
 
         dartboard = new Dartboard(boardSize);
 
-        slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
 
         if (playerAmount<=1 || maxPoints<=0 || throwsPerRound<=0){
             StringBuilder sb = new StringBuilder();
@@ -59,7 +56,7 @@ public class Darts {
             for (int i = 0; i < this.throwsPerRound; i++) {
                 try {
                     Random r = new Random();
-                    players[currentPlayerIndex].useThrow(evaluatePointsFromThrow(new Polar(r.nextInt((boardSize + 1)), r.nextInt((360)))));
+                    players[currentPlayerIndex].useThrow(dartboard.evaluatePointsFromThrow(new Polar(r.nextInt((boardSize + 1)), r.nextInt((360)))));
                 } catch (IllegalStateException e){
                     System.out.println(players[currentPlayerIndex].getName() + " has reached a lower score than 0!");
                     resetIllegalThrow(null);
@@ -97,43 +94,6 @@ public class Darts {
         return null;
     }
 
-    //public int evaluatePointsFromThrow(double x, double y) {
-    //    return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
-    //}
-    public int evaluatePointsFromThrow(Polar pos){
-
-        double octagonalBoardSize = ((double)boardSize)/8;
-
-        double distance = pos.getDistance();
-
-        if (distance>boardSize){
-            return 0;
-        }
-
-        if (distance<=octagonalBoardSize*2) {
-            if (distance < octagonalBoardSize) {
-                return 50;
-            }
-            return 25;
-        }
-
-        double angle = pos.getAngle();
-        if (angle<0){
-            angle = 360+angle;
-        }
-        int pointMultiplier = 1;
-        if (distance>octagonalBoardSize*7){
-            pointMultiplier = 2;
-        }
-        if (distance<=octagonalBoardSize*5 && distance>octagonalBoardSize*4){
-            pointMultiplier = 3;
-        }
-        return slicePoints[(int)((((angle+((360.0/slicePoints.length)/2.0))%360))/(360.0/slicePoints.length))]*pointMultiplier;
-    }
-
-    public int getBoardSize(){
-        return boardSize;
-    }
     public void printPlayerStats(Player p){
         System.out.println(p.toString());
     }

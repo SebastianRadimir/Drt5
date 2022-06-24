@@ -1,17 +1,62 @@
 package hwr.oop;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Dartboard {
 
-    private final int boardSize;
+    private int boardSize;
+    private final int[] slicePoints;
+    private ArrayList<Dart> thrownDarts = new ArrayList<>();
 
     public Dartboard(int boardSize){
+        this.slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
         this.boardSize = boardSize;
-
     }
 
+    void addDart(Dart d){
+        thrownDarts.add(d);
+    }
     public void removeDart(Dart d){
+        thrownDarts.remove(d);
+    }
+
+    public int getBoardSize(){
+        return boardSize;
+    }
+
+    //public int evaluatePointsFromThrow(double x, double y) {
+    //    return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
+    //}
+    public int evaluatePointsFromThrow(Polar pos){
+
+        double octagonalBoardSize = ((double)boardSize)/8;
+
+        double distance = pos.getDistance();
+
+        if (distance>boardSize){
+            return 0;
+        }
+
+        if (distance<=octagonalBoardSize*2) {
+            if (distance < octagonalBoardSize) {
+                return 50;
+            }
+            return 25;
+        }
+
+        double angle = pos.getAngle();
+        if (angle<0){
+            angle = 360+angle;
+        }
+        int pointMultiplier = 1;
+        if (distance>octagonalBoardSize*7){
+            pointMultiplier = 2;
+        }
+        if (distance<=octagonalBoardSize*5 && distance>octagonalBoardSize*4){
+            pointMultiplier = 3;
+        }
+        return slicePoints[(int)((((angle+((360.0/slicePoints.length)/2.0))%360))/(360.0/slicePoints.length))]*pointMultiplier;
     }
 
     @Override
