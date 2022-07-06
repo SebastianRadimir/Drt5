@@ -73,8 +73,12 @@ public class Darts {
     }
 
     public void resetIllegalThrow(Dart d){
-        players[currentPlayerIndex].resetLastPoint();
-        dartboard.getDartCollection().removeDart(d);
+        try {
+            players[currentPlayerIndex].resetLastPoint();
+            dartboard.removeDart(d);
+        } catch (UnsupportedOperationException ignored){
+
+        }
     }
     public void iterateToNextPlayer(){
         players[currentPlayerIndex].resetPlayerTurn();

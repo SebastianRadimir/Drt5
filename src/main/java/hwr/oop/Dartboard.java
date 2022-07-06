@@ -1,32 +1,35 @@
 package hwr.oop;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Dartboard {
 
-    private int boardSize;
+    private final int boardSize;
     private final int[] slicePoints;
 
-    private DartCollection dartCollenction;
+    private final DartCollection dartCollection;
 
     public Dartboard(int boardSize){
         this.slicePoints = new int[]{6,13,4,18,1,20,5,12,9,14,11,8,16,7,19,3,17,2,15,10};
         this.boardSize = boardSize;
-        this.dartCollenction = new DartCollection();
+        this.dartCollection = new DartCollection();
     }
 
     DartCollection getDartCollection(){
-        return dartCollenction;
+        return dartCollection;
+    }
+
+    void addDart(Dart d){
+        dartCollection.addDart(d);
+    }
+    void removeDart(Dart d){
+        dartCollection.removeDart(d);
     }
 
     public int getBoardSize(){
         return boardSize;
     }
 
-    //public int evaluatePointsFromThrow(double x, double y) {
-    //    return evaluatePointsFromThrow(Polar.convertPosToPolar(x, y));
-    //}
     int evaluatePointsFromThrow(Polar pos){
 
         double octagonalBoardSize = ((double)boardSize)/8;

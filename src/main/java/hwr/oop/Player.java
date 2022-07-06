@@ -52,8 +52,11 @@ public class Player {
         return sum;
     }
 
-    public void resetLastPoint(){
-        pointsInRound[maxThrowCount-throwCount] = 0;
+    void resetLastPoint(){
+        if (throwCount>=maxThrowCount){
+            throw new UnsupportedOperationException("Cant reset a throw if there is no throw to reset!");
+        }
+        pointsInRound[(maxThrowCount-throwCount)-1] = 0;
     }
 
     public boolean hasWon(){
@@ -66,16 +69,15 @@ public class Player {
 
     public void useThrow(int reachedPoints) {
         if (reachedPoints >= 61 || reachedPoints <= -1){
-            throw new IllegalStateException("\n - '"+name+"' has reached "+reachedPoints+" points, which isn't possible).");
+            throw new IllegalStateException("\n - the throw of '"+name+"' is "+reachedPoints+" points, which isn't possible.");
         }
         if (endedTurn()){
             throw new UnsupportedOperationException("\n - '"+name+"' has already used up all "+maxThrowCount+" throw(s).");
         }
-
-        pointsInRound[maxThrowCount-throwCount] = reachedPoints;
-        if (maxGamePoints-(currentPoints+sumRoundPoints())<0){
-            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+(maxGamePoints-(currentPoints+sumRoundPoints()))+" points reached).");
+        if (maxGamePoints-(currentPoints+(sumRoundPoints()+reachedPoints))<0){
+            throw new IllegalStateException("\n - '"+name+"' has reached less than 0 points ("+(maxGamePoints-(currentPoints+(sumRoundPoints()+reachedPoints)))+" points reached).");
         }
+        pointsInRound[maxThrowCount-throwCount] = reachedPoints;
         throwCount--;
     }
 
@@ -108,7 +110,7 @@ public class Player {
             sb.append("\n");
         }
 
-        int acquiredPoints = maxGamePoints-currentPoints;
+        int acquiredPoints = maxGamePoints-(currentPoints+sumRoundPoints());
 
         sb.append("Currently at ");
         sb.append(acquiredPoints);

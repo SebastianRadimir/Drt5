@@ -24,6 +24,9 @@ public class DartCollection{
         return listDarts;
     }
     void addDart(Dart d){
+        if (d == null){
+            return;
+        }
         thrownDarts.add(d);
     }
     public void removeDart(Dart d){
