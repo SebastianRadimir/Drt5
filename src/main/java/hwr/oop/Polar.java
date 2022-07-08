@@ -1,5 +1,6 @@
 package hwr.oop;
 
+import java.lang.Math;
 public class Polar {
 
     private final double distance;
